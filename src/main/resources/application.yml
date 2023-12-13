@@ -1,0 +1,122 @@
+spring:
+  profiles:
+    group:
+      local: local,common
+      prd: prd,common
+---
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    org.hibernate.SQL: info
+spring:
+  config:
+    activate:
+      on-profile: common
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 300MB
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ""
+            client-secret: " "
+            admin-key: ""
+            client-name: Kakao
+            client-authentication-method: POST
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+            jwk-set-uri: https://kauth.kakao.com/oauth/keys
+  tymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  database:
+    column:
+      encrypt:
+        key: ""
+
+jwt:
+  secret: ""
+  accessValidTime:
+  refreshValidTime:
+
+cloud:
+  aws:
+    credentials:
+      access-key: ""
+      secret-key: ""
+    stack:
+      auto: false
+    region:
+      static:
+    s3:
+      bucket:
+    baseUrl:
+
+springdoc:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /api-docs
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+
+portone:
+  api-key: ""
+  secret-key: ""
+
+
+--- # local profile
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+        type: debug
+        default_batch_fetch_size: 100
+
+--- # prd profile
+spring:
+  config:
+    activate:
+      on-profile: prd
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        format_sql: false
+        type: debug
+        default_batch_fetch_size: 100
+
